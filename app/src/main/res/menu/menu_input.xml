@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/clear_input"
+        android:icon="@drawable/ic_delete_white_48dp"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/clear"/>
+</menu>

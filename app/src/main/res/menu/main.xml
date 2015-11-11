@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/clear_all"
+        android:icon="@drawable/ic_delete_white_48dp"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/clear_all"/>
+    <item
+        android:id="@+id/action_set_server_address"
+        android:orderInCategory="50"
+        android:showAsAction="never"
+        android:title="@string/set_server_address"/>
+    <item
+        android:id="@+id/action_send"
+        android:orderInCategory="25"
+        android:icon="@drawable/ic_send_white_48dp"
+        android:showAsAction="always"
+        android:title="@string/send"/>
+</menu>

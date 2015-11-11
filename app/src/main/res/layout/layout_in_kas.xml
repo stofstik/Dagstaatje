@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/expandingLayoutExtra_in_kas"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="125dp" >
+
+    <EditText
+        android:id="@+id/extra_in_kas_inflated"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/text_extra"
+        android:inputType="numberDecimal" />
+
+</LinearLayout>

@@ -1,0 +1,974 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ondersteBalk">
+
+        <RelativeLayout
+            android:id="@+id/content_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/highlight">
+
+            <Button
+                android:id="@+id/b500min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro500"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b500min"
+                android:layout_toRightOf="@+id/b500min"
+                android:layout_toEndOf="@+id/b500min"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b500plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b500min"
+                android:layout_toRightOf="@+id/euro500"
+                android:layout_toEndOf="@+id/euro500"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken500"
+                android:layout_width="30dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/b500plus"
+                android:layout_toEndOf="@+id/b500plus"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro500"
+                android:layout_width="30dp"
+                android:layout_height="48dp"
+                android:layout_toRightOf="@+id/keerTeken500"
+                android:layout_toEndOf="@+id/keerTeken500"
+                android:gravity="start|center_vertical"
+                android:singleLine="true"
+                android:text="@string/vijfhonderd"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro500Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_toRightOf="@+id/tvEuro500"
+                android:layout_toEndOf="@+id/tvEuro500"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b200min"
+                android:layout_below="@+id/b500min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro200"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b200min"
+                android:layout_toRightOf="@+id/b200min"
+                android:layout_toEndOf="@+id/b200min"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b200plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b200min"
+                android:layout_toRightOf="@+id/euro200"
+                android:layout_toEndOf="@+id/euro200"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken200"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b200min"
+                android:layout_toRightOf="@+id/b200plus"
+                android:layout_toEndOf="@+id/b200plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro200"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+
+                android:layout_toRightOf="@+id/keerTeken200"
+                android:layout_toEndOf="@+id/keerTeken200"
+                android:layout_alignBaseline="@id/b200min"
+                android:singleLine="true"
+                android:text="@string/tweehonderd"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro200Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@+id/b200min"
+                android:layout_toRightOf="@+id/tvEuro200"
+                android:layout_toEndOf="@+id/tvEuro200"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b100min"
+                android:layout_below="@+id/b200min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro100"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b100min"
+                android:layout_toRightOf="@+id/b100min"
+                android:layout_toEndOf="@+id/b100min"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b100plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b100min"
+                android:layout_toRightOf="@+id/euro100"
+                android:layout_toEndOf="@+id/euro100"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken100"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b100min"
+                android:layout_toRightOf="@+id/b100plus"
+                android:layout_toEndOf="@+id/b100plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro100"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken100"
+                android:layout_toEndOf="@+id/keerTeken100"
+                android:layout_alignBaseline="@id/b100min"
+                android:singleLine="true"
+                android:text="@string/honderd"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro100Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b100min"
+                android:layout_toRightOf="@+id/tvEuro100"
+                android:layout_toEndOf="@+id/tvEuro100"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b50min"
+                android:layout_below="@+id/b100min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro50"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b50min"
+                android:layout_toRightOf="@+id/b50min"
+                android:layout_toEndOf="@+id/b50min"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b50plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b50min"
+                android:layout_toRightOf="@+id/euro50"
+                android:layout_toEndOf="@+id/euro50"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken50"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b50min"
+                android:layout_toRightOf="@+id/b50plus"
+                android:layout_toEndOf="@+id/b50plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro50"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken50"
+                android:layout_toEndOf="@+id/keerTeken50"
+                android:layout_alignBaseline="@id/b50min"
+                android:singleLine="true"
+                android:text="@string/vijftig"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro50Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b50min"
+                android:layout_toRightOf="@+id/tvEuro50"
+                android:layout_toEndOf="@+id/tvEuro50"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b20min"
+                android:layout_below="@+id/b50min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro20"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b20min"
+                android:layout_toRightOf="@+id/b20min"
+                android:layout_toEndOf="@+id/b20min"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b20plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b20min"
+                android:layout_toRightOf="@+id/euro20"
+                android:layout_toEndOf="@+id/euro20"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken20"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b20min"
+                android:layout_toRightOf="@+id/b20plus"
+                android:layout_toEndOf="@+id/b20plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro20"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken20"
+                android:layout_toEndOf="@+id/keerTeken20"
+                android:layout_alignBaseline="@id/b20min"
+                android:singleLine="true"
+                android:text="@string/twintig"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro20Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b20min"
+                android:layout_toRightOf="@+id/tvEuro20"
+                android:layout_toEndOf="@+id/tvEuro20"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b10min"
+                android:layout_below="@+id/b20min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro10"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b10min"
+                android:layout_toRightOf="@+id/b10min"
+                android:layout_toEndOf="@+id/b10min"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b10plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b10min"
+                android:layout_toRightOf="@+id/euro10"
+                android:layout_toEndOf="@+id/euro10"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken10"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b10min"
+                android:layout_toRightOf="@+id/b10plus"
+                android:layout_toEndOf="@+id/b10plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro10"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken10"
+                android:layout_toEndOf="@+id/keerTeken10"
+                android:layout_alignBaseline="@id/b10min"
+                android:singleLine="true"
+                android:text="@string/tien"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro10Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b10min"
+                android:layout_toRightOf="@+id/tvEuro10"
+                android:layout_toEndOf="@+id/tvEuro10"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+            <Button
+                android:id="@+id/b5min"
+                android:layout_below="@+id/b10min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/euro5"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b5min"
+                android:layout_toRightOf="@+id/b5min"
+                android:layout_toEndOf="@+id/b5min"
+                android:ems="5"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b5plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b5min"
+                android:layout_toRightOf="@+id/euro5"
+                android:layout_toEndOf="@+id/euro5"
+                android:text="@string/plus"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/keerTeken5"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b5min"
+                android:layout_toRightOf="@+id/b5plus"
+                android:layout_toEndOf="@+id/b5plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro5"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken5"
+                android:layout_toEndOf="@+id/keerTeken5"
+                android:layout_alignBaseline="@id/b5min"
+                android:singleLine="true"
+                android:text="@string/vijf"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro5Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b5min"
+                android:layout_toRightOf="@+id/tvEuro5"
+                android:layout_toEndOf="@+id/tvEuro5"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b2min"
+                android:layout_below="@+id/b5min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/euro2"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b2min"
+                android:layout_toRightOf="@+id/b2min"
+                android:layout_toEndOf="@+id/b2min"
+                android:ems="2"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b2plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b2min"
+                android:layout_toRightOf="@+id/euro2"
+                android:layout_toEndOf="@+id/euro2"
+                android:text="@string/plus"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/keerTeken2"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b2min"
+                android:layout_toRightOf="@+id/b2plus"
+                android:layout_toEndOf="@+id/b2plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro2"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken2"
+                android:layout_toEndOf="@+id/keerTeken2"
+                android:layout_alignBaseline="@id/b2min"
+                android:singleLine="true"
+                android:text="@string/twee"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro2Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b2min"
+                android:layout_toRightOf="@+id/tvEuro2"
+                android:layout_toEndOf="@+id/tvEuro2"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b1min"
+                android:layout_below="@+id/b2min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/euro1"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b1min"
+                android:layout_toRightOf="@+id/b1min"
+                android:layout_toEndOf="@+id/b1min"
+                android:ems="1"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b1plus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b1min"
+                android:layout_toRightOf="@+id/euro1"
+                android:layout_toEndOf="@+id/euro1"
+                android:text="@string/plus"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/keerTeken1"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b1min"
+                android:layout_toRightOf="@+id/b1plus"
+                android:layout_toEndOf="@+id/b1plus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvEuro1"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken1"
+                android:layout_toEndOf="@+id/keerTeken1"
+                android:layout_alignBaseline="@id/b1min"
+                android:singleLine="true"
+                android:text="@string/een"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvEuro1Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b1min"
+                android:layout_toRightOf="@+id/tvEuro1"
+                android:layout_toEndOf="@+id/tvEuro1"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <Button
+                android:id="@+id/b50cmin"
+                android:layout_below="@+id/b1min"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/cent50"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b50cmin"
+                android:layout_toRightOf="@+id/b50cmin"
+                android:layout_toEndOf="@+id/b50cmin"
+                android:ems="1"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b50cplus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b50cmin"
+                android:layout_toRightOf="@+id/cent50"
+                android:layout_toEndOf="@+id/cent50"
+                android:text="@string/plus"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/keerTeken50c"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b50cmin"
+                android:layout_toRightOf="@+id/b50cplus"
+                android:layout_toEndOf="@+id/b50cplus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvCent50"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken50c"
+                android:layout_toEndOf="@+id/keerTeken50c"
+                android:layout_alignBaseline="@id/b50cmin"
+                android:singleLine="true"
+                android:text="@string/vijftig_cent"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvCent50Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b50cmin"
+                android:layout_toRightOf="@+id/tvCent50"
+                android:layout_toEndOf="@+id/tvCent50"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <Button
+                android:id="@+id/b20cmin"
+                android:layout_below="@+id/b50cmin"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/cent20"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b20cmin"
+                android:layout_toRightOf="@+id/b20cmin"
+                android:layout_toEndOf="@+id/b20cmin"
+                android:ems="1"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b20cplus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b20cmin"
+                android:layout_toRightOf="@+id/cent20"
+                android:layout_toEndOf="@+id/cent20"
+                android:text="@string/plus"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/keerTeken20c"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b20cmin"
+                android:layout_toRightOf="@+id/b20cplus"
+                android:layout_toEndOf="@+id/b20cplus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvCent20"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken20c"
+                android:layout_toEndOf="@+id/keerTeken20c"
+                android:layout_alignBaseline="@id/b20cmin"
+                android:singleLine="true"
+                android:text="@string/twintig_cent"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvCent20Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b20cmin"
+                android:layout_toRightOf="@+id/tvCent20"
+                android:layout_toEndOf="@+id/tvCent20"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b10cmin"
+                android:layout_below="@+id/b20cmin"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/cent10"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b10cmin"
+                android:layout_toRightOf="@+id/b10cmin"
+                android:layout_toEndOf="@+id/b10cmin"
+                android:ems="1"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b10cplus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b10cmin"
+                android:layout_toRightOf="@+id/cent10"
+                android:layout_toEndOf="@+id/cent10"
+                android:text="@string/plus"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/keerTeken10c"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b10cmin"
+                android:layout_toRightOf="@+id/b10cplus"
+                android:layout_toEndOf="@+id/b10cplus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvCent10"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken10c"
+                android:layout_toEndOf="@+id/keerTeken10c"
+                android:layout_alignBaseline="@id/b10cmin"
+                android:singleLine="true"
+                android:text="@string/tien_cent"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvCent10Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b10cmin"
+                android:layout_toRightOf="@+id/tvCent10"
+                android:layout_toEndOf="@+id/tvCent10"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:id="@+id/b5cmin"
+                android:layout_below="@+id/b10cmin"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="@string/min"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/cent5"
+                android:layout_width="75dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b5cmin"
+                android:layout_toRightOf="@+id/b5cmin"
+                android:layout_toEndOf="@+id/b5cmin"
+                android:ems="1"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/b5cplus"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignBaseline="@id/b5cmin"
+                android:layout_toRightOf="@+id/cent5"
+                android:layout_toEndOf="@+id/cent5"
+                android:text="@string/plus"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/keerTeken5c"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/b5cmin"
+                android:layout_toRightOf="@+id/b5cplus"
+                android:layout_toEndOf="@+id/b5cplus"
+                android:gravity="center"
+                android:text="@string/keer" />
+
+            <TextView
+                android:id="@+id/tvCent5"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/keerTeken5c"
+                android:layout_toEndOf="@+id/keerTeken5c"
+                android:layout_alignBaseline="@id/b5cmin"
+                android:singleLine="true"
+                android:text="@string/vijf_cent"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tvCent5Totaal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignTop="@id/b5cmin"
+                android:layout_toRightOf="@+id/tvCent5"
+                android:layout_toEndOf="@+id/tvCent5"
+                android:gravity="start|center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:singleLine="true"
+                android:text="@string/puntjes"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/ondersteBalk"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:id="@+id/vDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/accent" />
+
+        <TextView
+            android:id="@+id/tvTotaalBriefjes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vDivider"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:singleLine="true"
+            android:text="@string/totaal_briefjes" />
+
+        <TextView
+            android:id="@+id/tvTotaalMunten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTotaalBriefjes"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:singleLine="true"
+            android:text="@string/totaal_munten" />
+
+
+        <TextView
+            android:id="@+id/tvTotaalBriefjesBedrag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvTotaalBriefjes"
+            android:layout_marginLeft="70dp"
+            android:layout_marginStart="70dp"
+            android:singleLine="true"
+            android:text="@string/zilch" />
+
+        <TextView
+            android:id="@+id/tvTotaalMuntenBedrag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvTotaalMunten"
+            android:layout_marginLeft="70dp"
+            android:layout_marginStart="70dp"
+            android:singleLine="true"
+            android:text="@string/zilch" />
+
+
+        <TextView
+            android:id="@+id/tvTotaal"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="191dp"
+            android:layout_marginStart="191dp"
+            android:gravity="center|end"
+
+            android:singleLine="true"
+            android:text="@string/totaal"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/tvTotaalBedrag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/tvTotaal"
+            android:layout_toEndOf="@id/tvTotaal"
+            android:gravity="center|start"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
+            android:singleLine="true"
+            android:text="@string/puntjes"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
+
+    </RelativeLayout>
+</RelativeLayout>

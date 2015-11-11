@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/settings_title" >
+        <ListPreference
+            android:defaultValue="4"
+            android:entries="@array/requestFocusKeuze"
+            android:entryValues="@array/requestFocusWaarde"
+            android:key="listReqFocus"
+            android:summary="@string/settings_bedragkeuze_summary"
+            android:title="@string/settings_bedragkeuze_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings__display_category_title" >
+        <CheckBoxPreference
+            android:id="@+id/checkBox_5_cent_id"
+            android:defaultValue="true"
+            android:key="cB5cents"
+            android:summaryOff="@string/settings_5_cents_disabled"
+            android:summaryOn="@string/settings_5_cents_enabled"
+            android:title="@string/settings_5_cents_title" />
+        <CheckBoxPreference
+            android:id="@+id/checkBox_1_2_cent_id"
+            android:defaultValue="false"
+            android:key="cB12cents"
+            android:summaryOff="@string/settings_12_cents_disabled"
+            android:summaryOn="@string/settings_12_cents_enabled"
+            android:title="@string/settings_12_cents_title" />
+        <CheckBoxPreference
+            android:id="@+id/checkBox_briefjes_munten"
+            android:defaultValue="true"
+            android:key="cbBriefjesMunten"
+            android:summaryOff="@string/settings_briefjes_munten_disabled"
+            android:summaryOn="@string/settings_briefjes_munten_enabled"
+            android:title="@string/settings_briefjes_munten_title" />
+        <CheckBoxPreference
+            android:id="@+id/knopjes"
+            android:defaultValue="true"
+            android:key="cbKnopjes"
+            android:summaryOff="@string/settings_knopjes_disabled"
+            android:summaryOn="@string/settings_knopjes_enabled"
+            android:title="@string/settings_knopjes_title" />
+        <ListPreference
+            android:defaultValue="3"
+            android:entries="@array/linksRechts"
+            android:entryValues="@array/linksRechtsWaardes"
+            android:key="listPrefLinksRechts"
+            android:summary="@string/settings_knopjes_lr_summary"
+            android:title="@string/settings_knopjes_lr_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
