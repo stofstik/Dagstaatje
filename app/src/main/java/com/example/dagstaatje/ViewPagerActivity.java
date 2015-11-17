@@ -25,8 +25,10 @@
 
 package com.example.dagstaatje;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -35,10 +37,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.stofstik.dagstaatje.R;
 
 import java.io.BufferedOutputStream;
@@ -55,11 +62,8 @@ import java.util.Locale;
 public class ViewPagerActivity extends FragmentActivity implements
         ServerAddressDialogFragment.NoticeDialogListener {
 
-    static String separator = ",";
-    static String data = "";
-    static DateFormat formatter = new SimpleDateFormat("d-M-yyyy", Locale.US);
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("d-M-yyyy", Locale.US);
 
-    static Socket socket = null;
     private static SharedPreferences sharedPreferences;
     public static final String KEY_SERVER_ADDRESS = "serverAddress";
     public static final String KEY_SERVER_PORT = "serverPort";
@@ -69,7 +73,7 @@ public class ViewPagerActivity extends FragmentActivity implements
     public static String serverAddress = "";
     public static int serverPort = 1337;
 
-    static Context context;
+    private static String remoteServerAddress = ""; // full address e.g http://bla.com:1337
 
     public static ArrayList<String> tabNames = new ArrayList<String>();
 
@@ -80,7 +84,7 @@ public class ViewPagerActivity extends FragmentActivity implements
         setContentView(R.layout.activity_pager);
 
         tabNames.add(getString(R.string.fragment_count));
-        tabNames.add( getString(R.string.fragment_input));
+        tabNames.add(getString(R.string.fragment_input));
         tabNames.add(getString(R.string.fragment_overview));
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -93,11 +97,12 @@ public class ViewPagerActivity extends FragmentActivity implements
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         serverAddress = sharedPreferences.getString(KEY_SERVER_ADDRESS, "");
         serverPort = sharedPreferences.getInt(KEY_SERVER_PORT, 1337);
-        context = getApplicationContext();
-
     }
 
     private class SendCSVTask extends AsyncTask<Void, Void, Integer> {
+        String separator = ",";
+        String data = "";
+        Socket socket = null;
 
         @Override
         protected void onPreExecute() {
@@ -110,25 +115,24 @@ public class ViewPagerActivity extends FragmentActivity implements
             super.onPostExecute(result);
             switch (result) {
                 case 0:
-                    Toast.makeText(context, "Verzonden", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Verzonden", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
-                    Toast.makeText(context, "Niet verbonden", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), "Niet verbonden", Toast.LENGTH_SHORT)
                             .show();
                     break;
                 case 2:
-                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
 
         @Override
         protected Integer doInBackground(Void... params) {
-            // date is today minus one day because we use this almost always
-            // ater midnight
+            // date is today minus one day because we use this almost always after midnight
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DATE, -1);
-            String strDate = formatter.format(cal.getTime());
+            String strDate = DATE_FORMAT.format(cal.getTime());
             StringBuilder sb = new StringBuilder();
             sb.append(strDate);
             sb.append(separator);
@@ -183,7 +187,37 @@ public class ViewPagerActivity extends FragmentActivity implements
                 return 2;
             }
         }
+    }
 
+    private void saveToDatabase() {
+        if (remoteServerAddress.isEmpty()) return;
+        Calendar cal = Calendar.getInstance();
+        String strDate = DATE_FORMAT.format(cal.getTime());
+        Uri.Builder builder = Uri.parse(remoteServerAddress).buildUpon()
+                .appendPath("newEntry")
+                .appendPath(strDate)
+                .appendPath("" + InputFragment.dStart)
+                .appendPath("" + InputFragment.dTotalExtra)
+                .appendPath("" + InputFragment.dTurnOver)
+                .appendPath("" + InputFragment.dTab)
+                .appendPath("" + InputFragment.dTabPaid)
+                .appendPath("" + InputFragment.dTotalOut)
+                .appendPath("" + InputFragment.dPin)
+                .appendPath("" + InputFragment.dCounted)
+                .appendPath("" + InputFragment.dEnvelope);
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, builder.toString(), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("saveToDatabase", "remote server responded with: " + response);
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show(); // TODO hide in production version
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     @Override
@@ -206,8 +240,10 @@ public class ViewPagerActivity extends FragmentActivity implements
                 newFragment.show(getSupportFragmentManager(), "ServerDialog");
                 return true;
             case R.id.action_send:
-                // send to server
+                // send to local server
                 new SendCSVTask().execute();
+                // send to remote database server
+                saveToDatabase();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -233,7 +269,6 @@ public class ViewPagerActivity extends FragmentActivity implements
                     return InputFragment.newInstance(position);
             }
         }
-
 
 
         @Override
