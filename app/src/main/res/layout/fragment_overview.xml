@@ -14,6 +14,12 @@
         android:orientation="vertical"
         android:weightSum="15">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_first_shift"
+            android:textStyle="bold"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -27,7 +33,7 @@
                 android:text="@string/text_start_amount" />
 
             <TextView
-                android:id="@+id/tvOverviewStartAmount"
+                android:id="@+id/tvFirstOverviewStartAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -47,7 +53,7 @@
                 android:text="@string/text_extra" />
 
             <TextView
-                android:id="@+id/tvOverviewExtra"
+                android:id="@+id/tvFirstOverviewExtra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -66,7 +72,7 @@
                 android:text="@string/text_turn_over" />
 
             <TextView
-                android:id="@+id/tvOverviewTurnOver"
+                android:id="@+id/tvFirstOverviewTurnOver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -85,7 +91,7 @@
                 android:text="@string/text_tab" />
 
             <TextView
-                android:id="@+id/tvOverviewTab"
+                android:id="@+id/tvFirstOverviewTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -104,7 +110,7 @@
                 android:text="@string/text_tab_paid" />
 
             <TextView
-                android:id="@+id/tvOverviewTabPaid"
+                android:id="@+id/tvFirstOverviewTabPaid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -124,7 +130,7 @@
                 android:text="@string/text_report" />
 
             <TextView
-                android:id="@+id/tvOverviewReport"
+                android:id="@+id/tvFirstOverviewReport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -144,7 +150,7 @@
                 android:text="@string/text_total_in" />
 
             <TextView
-                android:id="@+id/tvOverviewTotal"
+                android:id="@+id/tvFirstOverviewTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -163,7 +169,7 @@
                 android:text="@string/text_out" />
 
             <TextView
-                android:id="@+id/tvOverviewOut"
+                android:id="@+id/tvFirstOverviewOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -182,7 +188,7 @@
                 android:text="@string/text_pin" />
 
             <TextView
-                android:id="@+id/tvOverviewPin"
+                android:id="@+id/tvFirstOverviewPin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -202,7 +208,7 @@
                 android:text="@string/text_total_out" />
 
             <TextView
-                android:id="@+id/tvOverviewTotalOut"
+                android:id="@+id/tvFirstOverviewTotalOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -222,7 +228,7 @@
                 android:text="@string/text_result" />
 
             <TextView
-                android:id="@+id/tvOverviewResult"
+                android:id="@+id/tvFirstOverviewResult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -241,7 +247,7 @@
                 android:text="@string/text_counted" />
 
             <TextView
-                android:id="@+id/tvOverviewCounted"
+                android:id="@+id/tvFirstOverviewCounted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -261,7 +267,7 @@
                 android:text="@string/text_difference" />
 
             <TextView
-                android:id="@+id/tvOverviewDifference"
+                android:id="@+id/tvFirstOverviewDifference"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -280,7 +286,7 @@
                 android:text="@string/text_envelope" />
 
             <TextView
-                android:id="@+id/tvOverviewEnvelope"
+                android:id="@+id/tvFirstOverviewEnvelope"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
@@ -300,11 +306,315 @@
                 android:text="@string/text_new" />
 
             <TextView
-                android:id="@+id/tvOverviewNew"
+                android:id="@+id/tvFirstOverviewNew"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_not_filled" />
         </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_last_shift"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_start_amount" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewStartAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_extra" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewExtra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_turn_over" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewTurnOver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_tab" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_tab_paid" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewTabPaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_report" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_total_in" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_out" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_pin" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_total_out" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewTotalOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_result" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_counted" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewCounted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_difference" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewDifference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_envelope" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewEnvelope"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/highlight"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_new" />
+
+            <TextView
+                android:id="@+id/tvLastOverviewNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_filled" />
+        </LinearLayout>
+    </LinearLayout>
 
     </LinearLayout>
 

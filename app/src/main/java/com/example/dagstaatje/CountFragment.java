@@ -1,6 +1,7 @@
 package com.example.dagstaatje;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,46 +21,49 @@ import android.widget.TextView;
 
 import com.stofstik.dagstaatje.R;
 
-import java.util.Locale;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CountFragment extends Fragment implements TextWatcher, View.OnClickListener {
 
+    private ViewPagerActivityInterface mMainActivityCallback;
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        try {
+            mMainActivityCallback = (ViewPagerActivityInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ViewPagerActivityInterface");
+        }
+    }
+
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static View rootView;
+    private View rootView;
 
-    private SharedPreferences sharedPreferences;
-
-    private static int i500Value, i200Value, i100Value, i50Value, i20Value, i10Value, i5Value, i2Value,
-            i1Value, i50centValue, i20centValue, i10centValue, i5centValue, iBills, iCoins;
-
-    private static double d500Result, d200Result, d100Result, d50Result, d20Result, d10Result, d5Result,
-            d2Result, d1Result, d50centResult, d20centResult, d10centResult, d5centResult, dTotal, dEnvelope;
-
-    private static Button b500p, b200p, b100p, b50p, b20p, b10p, b5p, b2p, b1p, b50cp, b20cp, b10cp, b5cp;
-    private static Button b500m, b200m, b100m, b50m, b20m, b10m, b5m, b2m, b1m, b50cm, b20cm, b10cm, b5cm;
-    private static EditText et500, et200, et100, et50, et20, et10, et5, et2, et1, et50c, et20c, et10c, et5c;
-    private static TextView tv500, tv200, tv100, tv50, tv20, tv10, tv5, tv2, tv1, tv50c, tv20c, tv10c, tv5c,
+    private Button b500p, b200p, b100p, b50p, b20p, b10p, b5p, b2p, b1p, b50cp, b20cp, b10cp, b5cp;
+    private Button b500m, b200m, b100m, b50m, b20m, b10m, b5m, b2m, b1m, b50cm, b20cm, b10cm, b5cm;
+    private EditText et500, et200, et100, et50, et20, et10, et5, et2, et1, et50c, et20c, et10c, et5c;
+    private TextView tv500, tv200, tv100, tv50, tv20, tv10, tv5, tv2, tv1, tv50c, tv20c, tv10c, tv5c,
             tvTotal, tvCoins, tvBills;
 
-    private static boolean listen;
+    private boolean mListen;
 
-    private static final String KEY_500 = "500";
-    private static final String KEY_200 = "200";
-    private static final String KEY_100 = "100";
-    private static final String KEY_50 = "50";
-    private static final String KEY_20 = "20";
-    private static final String KEY_10 = "10";
-    private static final String KEY_5 = "5";
-    private static final String KEY_2 = "2";
-    private static final String KEY_1 = "1";
-    private static final String KEY_50C = "50C";
-    private static final String KEY_20C = "20C";
-    private static final String KEY_10C = "10C";
-    private static final String KEY_5C = "5C";
-    private static final String EURO_FORMAT = "€ %.2f";
+    private final String KEY_500 = "500";
+    private final String KEY_200 = "200";
+    private final String KEY_100 = "100";
+    private final String KEY_50 = "50";
+    private final String KEY_20 = "20";
+    private final String KEY_10 = "10";
+    private final String KEY_5 = "5";
+    private final String KEY_2 = "2";
+    private final String KEY_1 = "1";
+    private final String KEY_50C = "50C";
+    private final String KEY_20C = "20C";
+    private final String KEY_10C = "10C";
+    private final String KEY_5C = "5C";
+    private final String EURO_FORMAT = "€ %.2f";
 
     public static Fragment newInstance(int sectionNumber) {
         CountFragment fragment = new CountFragment();
@@ -76,9 +80,8 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         initializeViews();
-        LoadSavedEditTexts();
+        loadSharedPrefs();
         setFocus();
     }
 
@@ -118,12 +121,13 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         setFocus();
     }
 
+    @Override
     public void onPause() {
         super.onPause();
-        saveEditTexts();
+        saveSharedPrefs();
     }
 
-    public void initializeViews() {
+    private void initializeViews() {
         b500m = (Button) rootView.findViewById(R.id.b500min);
         b200m = (Button) rootView.findViewById(R.id.b200min);
         b100m = (Button) rootView.findViewById(R.id.b100min);
@@ -183,7 +187,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         tvBills = (TextView) rootView.findViewById(R.id.tvTotaalBriefjesBedrag);
         tvCoins = (TextView) rootView.findViewById(R.id.tvTotaalMuntenBedrag);
 
-        listen = false;
+        mListen = false;
         et500.addTextChangedListener(this);
         et200.addTextChangedListener(this);
         et100.addTextChangedListener(this);
@@ -197,7 +201,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         et20c.addTextChangedListener(this);
         et10c.addTextChangedListener(this);
         et5c.addTextChangedListener(this);
-        listen = true;
+        mListen = true;
 
         b500p.setOnClickListener(this);
         b200p.setOnClickListener(this);
@@ -230,7 +234,8 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
     }
 
     // sla variabelen op in SharedPreferences
-    public void saveEditTexts() {
+    private void saveSharedPrefs() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_500, et500.getText().toString());
         editor.putString(KEY_200, et200.getText().toString());
@@ -248,8 +253,10 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         editor.apply();
     }
 
-    // laad variabelen van SharedPreferences
-    private void LoadSavedEditTexts() {
+    // Laad variabelen van SharedPreferences
+    private void loadSharedPrefs() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mListen = false;
         et500.setText(sharedPreferences.getString(KEY_500, ""));
         et200.setText(sharedPreferences.getString(KEY_200, ""));
         et100.setText(sharedPreferences.getString(KEY_100, ""));
@@ -263,16 +270,19 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         et20c.setText(sharedPreferences.getString(KEY_20C, ""));
         et10c.setText(sharedPreferences.getString(KEY_10C, ""));
         et5c.setText(sharedPreferences.getString(KEY_5C, ""));
+        mListen = true;
+        // Run calculation to update all fields and set counted and envelope values of current dagstaat
+        new CalcTask().execute();
     }
 
     // zet focus
-    private static void setFocus() {
+    private void setFocus() {
         et50.requestFocus();
         et50.setSelection(et50.getText().length());
     }
 
-    public static void clearAll() {
-        listen = false;
+    public void clearAll() {
+        mListen = false;
         et500.setText("");
         et200.setText("");
         et100.setText("");
@@ -286,13 +296,13 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         et20c.setText("");
         et10c.setText("");
         et5c.setText("");
-        listen = true;
+        mListen = true;
         new CalcTask().execute();
         setFocus();
     }
 
     // EditText++
-    public void incrementEditText(EditText et) {
+    private void incrementEditText(EditText et) {
         String tmp = et.getText().toString();
         if (tmp.matches("")) {
             tmp = "0";
@@ -304,7 +314,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
     }
 
     // EditText--
-    public void decrementEditText(EditText et) {
+    private void decrementEditText(EditText et) {
         String tmp = et.getText().toString();
         if (tmp.matches("")) {
             tmp = "0";
@@ -319,15 +329,21 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         et.setSelection(et.getText().length());
     }
 
-    public static int iEtContent(EditText et) {
+    private int iEtContent(EditText et) {
         try {
             return Integer.parseInt(et.getText().toString());
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return 0;
         }
     }
 
-    private static class CalcTask extends AsyncTask<Void, Void, Void> {
+    private class CalcTask extends AsyncTask<Void, Void, Void> {
+        private int i500Value, i200Value, i100Value, i50Value, i20Value, i10Value, i5Value, i2Value,
+                i1Value, i50centValue, i20centValue, i10centValue, i5centValue, amountOfBills, amountOfCoins;
+
+        private double d500Result, d200Result, d100Result, d50Result, d20Result, d10Result, d5Result,
+                d2Result, d1Result, d50centResult, d20centResult, d10centResult, d5centResult, dTotal, dEnvelope;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -348,6 +364,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
 
         @Override
         protected Void doInBackground(Void... params) {
+            // Calculate all values from input fields
             d500Result = i500Value * 500;
             d200Result = i200Value * 200;
             d100Result = i100Value * 100;
@@ -362,23 +379,26 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
             d10centResult = i10centValue * 0.1;
             d5centResult = i5centValue * 0.05;
 
-            iBills = 0;
-            iBills += i500Value;
-            iBills += i200Value;
-            iBills += i100Value;
-            iBills += i50Value;
-            iBills += i20Value;
-            iBills += i10Value;
-            iBills += i5Value;
+            // Calculate the amount of bills we have
+            amountOfBills = 0;
+            amountOfBills += i500Value;
+            amountOfBills += i200Value;
+            amountOfBills += i100Value;
+            amountOfBills += i50Value;
+            amountOfBills += i20Value;
+            amountOfBills += i10Value;
+            amountOfBills += i5Value;
 
-            iCoins = 0;
-            iCoins += i2Value;
-            iCoins += i1Value;
-            iCoins += i50centValue;
-            iCoins += i20centValue;
-            iCoins += i10centValue;
-            iCoins += i5centValue;
+            // Calculate the amount of coins we have
+            amountOfCoins = 0;
+            amountOfCoins += i2Value;
+            amountOfCoins += i1Value;
+            amountOfCoins += i50centValue;
+            amountOfCoins += i20centValue;
+            amountOfCoins += i10centValue;
+            amountOfCoins += i5centValue;
 
+            // Calculate the total
             dTotal = 0;
             dTotal += d500Result;
             dTotal += d200Result;
@@ -394,6 +414,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
             dTotal += d10centResult;
             dTotal += d5centResult;
 
+            // Calculate what goes into the envelope
             dEnvelope = 0;
             dEnvelope += d500Result;
             dEnvelope += d200Result;
@@ -412,7 +433,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            tv500.setText(String.format(Locale.UK, EURO_FORMAT, d500Result));
+            tv500.setText(String.format(EURO_FORMAT, d500Result));
             tv200.setText(String.format(EURO_FORMAT, d200Result));
             tv100.setText(String.format(EURO_FORMAT, d100Result));
             tv50.setText(String.format(EURO_FORMAT, d50Result));
@@ -426,30 +447,28 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
             tv10c.setText(String.format(EURO_FORMAT, d10centResult));
             tv5c.setText(String.format(EURO_FORMAT, d5centResult));
 
-            tvBills.setText("" + iBills);
-            tvCoins.setText("" + iCoins);
+            tvBills.setText("" + amountOfBills);
+            tvCoins.setText("" + amountOfCoins);
             tvTotal.setText(String.format(EURO_FORMAT, dTotal));
 
+            // Set values of current dagstaat
             if (dTotal != 0) {
-                InputFragment.dCounted = dTotal;
-                if (InputFragment.etCounted != null) { // etCounted can be null if the fragment is not yet created
-                    InputFragment.etCounted.setText((String.format(Locale.UK, "%.2f", dTotal))); // use locale uk, else we won't be able to parse double later because of comma
-                }
+                mMainActivityCallback.getCurrentDagstaat().setCounted(dTotal);
             }
-
             if (dEnvelope != 0) {
-                InputFragment.dEnvelope = dEnvelope;
-                if (InputFragment.etEnvelope != null) {
-                    InputFragment.etEnvelope.setText((String.format(Locale.UK, "%.2f", dEnvelope)));
-                }
+                mMainActivityCallback.getCurrentDagstaat().setEnvelope(dEnvelope);
             }
+            // Get the counted and envelope values from the current dagstaat and set the EditTexts
+            // respectively
+            mMainActivityCallback.updateInputFragmentFields();
+
         }
     }
 
-    // doe dit als er tekst veranderd
+
     @Override
     public void afterTextChanged(Editable args) {
-        if (listen) {
+        if (mListen) {
             new CalcTask().execute();
         }
     }
@@ -470,6 +489,7 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            // User clicks a plus button
             case R.id.b500plus:
                 incrementEditText(et500);
                 break;
@@ -509,6 +529,8 @@ public class CountFragment extends Fragment implements TextWatcher, View.OnClick
             case R.id.b5cplus:
                 incrementEditText(et5c);
                 break;
+
+            // User clicks a minus button
             case R.id.b500min:
                 decrementEditText(et500);
                 break;

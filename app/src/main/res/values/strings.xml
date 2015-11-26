@@ -2,9 +2,12 @@
 <resources>
 
     <string name="app_name">Dagstaatje</string>
+
     <string name="fragment_count">Count</string>
     <string name="fragment_input">Dagstaatje</string>
     <string name="fragment_overview">Overzicht</string>
+    <string name="fragment_history">Geschiedenis</string>
+
     <string name="action_settings">Instellingen</string>
     <string name="zilch">€ 0.00</string>
     <string name="clear_all">Wis alles</string>
@@ -15,6 +18,8 @@
     <string name="button_min">-</string>
     <string name="button_plus">+</string>
     <string name="button_calc">Calc.</string>
+    <string name="text_first_shift">Middagdienst</string>
+    <string name="text_last_shift">Avonddienst</string>
     <string name="text_start_amount">Beginkas</string>
     <string name="text_extra">Extra in kas</string>
     <string name="text_total_extra">Totaal extra in kas</string>

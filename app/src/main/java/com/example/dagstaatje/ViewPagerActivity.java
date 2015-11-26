@@ -21,11 +21,18 @@
  * actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS); is deprecated
  * so we need to use PagerTabStrip
  * http://developer.android.com/reference/android/support/v4/view/PagerTabStrip.html
+ *
+ * 25-nov-2015
+ *
+ * Holy crap! It has been more than a year since I have worked on this.
+ * A lot has happened since then... Wow!
+ * Okay, take a breath.
+ * Let's clean this mess up a bit more and implement some logic to communicate with a mongoDb server
  */
 
 package com.example.dagstaatje;
 
-import android.app.DownloadManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -42,7 +49,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -55,40 +61,49 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class ViewPagerActivity extends FragmentActivity implements
-        ServerAddressDialogFragment.NoticeDialogListener {
+        ServerAddressDialogFragment.NoticeDialogListener,
+        ViewPagerActivityInterface {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("d-M-yyyy", Locale.US);
+    public static final DateFormat SERVER_DATE_FORMAT = new SimpleDateFormat("yyyy-M-d", Locale.US); // TODO check compatibility stuffs
 
-    private static SharedPreferences sharedPreferences;
+    public static final int POSITION_COUNT_FRAGMENT = 0;
+    public static final int POSITION_INPUT_FRAGMENT = 1;
+    public static final int POSITION_OVERVIEW_FRAGMENT = 2;
+    public static final int POSITION_HISTORY_FRAGMENT = 3;
+
+    private SharedPreferences sharedPreferences;
     public static final String KEY_SERVER_ADDRESS = "serverAddress";
     public static final String KEY_SERVER_PORT = "serverPort";
 
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
+    public static MyPagerAdapter mPagerAdapter;
+
+
     SlidingTabLayout mSLidingTabLayout;
     public static String serverAddress = "";
     public static int serverPort = 1337;
 
-    private static String remoteServerAddress = ""; // full address e.g http://bla.com:1337
+    public static Dagstaat mCurrentDagstaat;
 
-    public static ArrayList<String> tabNames = new ArrayList<String>();
+    public final static String REMOTE_SERVER_ADDRESS = "http://192.168.0.11:3001"; // full address e.g http://bla.com:1337
+
+    private static final int[] TAB_NAMES = {R.string.fragment_count, R.string.fragment_input, R.string.fragment_overview, R.string.fragment_history};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCurrentDagstaat = new Dagstaat();
 
         setContentView(R.layout.activity_pager);
 
-        tabNames.add(getString(R.string.fragment_count));
-        tabNames.add(getString(R.string.fragment_input));
-        tabNames.add(getString(R.string.fragment_overview));
-
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
 
         mSLidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -99,14 +114,51 @@ public class ViewPagerActivity extends FragmentActivity implements
         serverPort = sharedPreferences.getInt(KEY_SERVER_PORT, 1337);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    /*
+    Updates the TextViews with the values from mCurrentDagstaat
+     */
+    @Override
+    public void updateOverviewFragment() {
+        OverviewFragment overviewFragment = (OverviewFragment)
+                getSupportFragmentManager()
+                        .findFragmentByTag(mPagerAdapter.getFragmentTag(mViewPager.getId(), POSITION_OVERVIEW_FRAGMENT));
+        overviewFragment.update();
+    }
+
+    /*
+    Updates the counted and envelope EditTexts with the values from mCurrentDagstaat
+     */
+    @Override
+    public void updateInputFragmentFields() {
+        InputFragment inputFragment = (InputFragment)
+                getSupportFragmentManager()
+                        .findFragmentByTag(mPagerAdapter.getFragmentTag(mViewPager.getId(), POSITION_INPUT_FRAGMENT));
+        inputFragment.updateFields();
+    }
+
+    @Override
+    public Dagstaat getCurrentDagstaat() {
+        return mCurrentDagstaat;
+    }
+
     private class SendCSVTask extends AsyncTask<Void, Void, Integer> {
         String separator = ",";
         String data = "";
         Socket socket = null;
+        Dagstaat dagstaat;
 
         @Override
         protected void onPreExecute() {
-            // TODO Auto-generated method stub
             super.onPreExecute();
         }
 
@@ -136,23 +188,23 @@ public class ViewPagerActivity extends FragmentActivity implements
             StringBuilder sb = new StringBuilder();
             sb.append(strDate);
             sb.append(separator);
-            sb.append(InputFragment.dStart);
+            sb.append(dagstaat.getStart());
             sb.append(separator);
-            sb.append(InputFragment.dTotalExtra);
+            sb.append(dagstaat.getExtra());
             sb.append(separator);
-            sb.append(InputFragment.dTurnOver);
+            sb.append(dagstaat.getTurnover());
             sb.append(separator);
-            sb.append(InputFragment.dTab);
+            sb.append(dagstaat.getTab());
             sb.append(separator);
-            sb.append(InputFragment.dTabPaid);
+            sb.append(dagstaat.getTabPaid());
             sb.append(separator);
-            sb.append(InputFragment.dTotalOut);
+            sb.append(dagstaat.getOut());
             sb.append(separator);
-            sb.append(InputFragment.dPin);
+            sb.append(dagstaat.getPin());
             sb.append(separator);
-            sb.append(InputFragment.dCounted);
+            sb.append(dagstaat.getCounted());
             sb.append(separator);
-            sb.append(InputFragment.dEnvelope);
+            sb.append(dagstaat.getEnvelope());
             data = sb.toString();
 
             Exception exception = null;
@@ -190,21 +242,19 @@ public class ViewPagerActivity extends FragmentActivity implements
     }
 
     private void saveToDatabase() {
-        if (remoteServerAddress.isEmpty()) return;
-        Calendar cal = Calendar.getInstance();
-        String strDate = DATE_FORMAT.format(cal.getTime());
-        Uri.Builder builder = Uri.parse(remoteServerAddress).buildUpon()
+        if (REMOTE_SERVER_ADDRESS.isEmpty()) return;
+        Uri.Builder builder = Uri.parse(REMOTE_SERVER_ADDRESS).buildUpon()
                 .appendPath("newEntry")
-                .appendPath(strDate)
-                .appendPath("" + InputFragment.dStart)
-                .appendPath("" + InputFragment.dTotalExtra)
-                .appendPath("" + InputFragment.dTurnOver)
-                .appendPath("" + InputFragment.dTab)
-                .appendPath("" + InputFragment.dTabPaid)
-                .appendPath("" + InputFragment.dTotalOut)
-                .appendPath("" + InputFragment.dPin)
-                .appendPath("" + InputFragment.dCounted)
-                .appendPath("" + InputFragment.dEnvelope);
+                .appendPath(mCurrentDagstaat.getShift())
+                .appendPath("" + mCurrentDagstaat.getStart())
+                .appendPath("" + mCurrentDagstaat.getExtra())
+                .appendPath("" + mCurrentDagstaat.getTurnover())
+                .appendPath("" + mCurrentDagstaat.getTab())
+                .appendPath("" + mCurrentDagstaat.getTabPaid())
+                .appendPath("" + mCurrentDagstaat.getOut())
+                .appendPath("" + mCurrentDagstaat.getPin())
+                .appendPath("" + mCurrentDagstaat.getCounted())
+                .appendPath("" + mCurrentDagstaat.getEnvelope());
         StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, builder.toString(), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -231,8 +281,14 @@ public class ViewPagerActivity extends FragmentActivity implements
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.clear_all:
-                InputFragment.clearAll();
-                CountFragment.clearAll();
+                InputFragment inputFragment = (InputFragment)
+                        getSupportFragmentManager()
+                                .findFragmentByTag(mPagerAdapter.getFragmentTag(mViewPager.getId(), POSITION_INPUT_FRAGMENT));
+                inputFragment.clearAll();
+                CountFragment countFragment = (CountFragment)
+                        getSupportFragmentManager()
+                                .findFragmentByTag(mPagerAdapter.getFragmentTag(mViewPager.getId(), POSITION_COUNT_FRAGMENT));
+                countFragment.clearAll();
                 return true;
             case R.id.action_set_server_address:
                 // show dialog for server
@@ -259,29 +315,40 @@ public class ViewPagerActivity extends FragmentActivity implements
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
+                case POSITION_COUNT_FRAGMENT:
                     return CountFragment.newInstance(position);
-                case 1:
+                case POSITION_INPUT_FRAGMENT:
                     return InputFragment.newInstance(position);
-                case 2:
+                case POSITION_OVERVIEW_FRAGMENT:
                     return OverviewFragment.newInstance(position);
+                case POSITION_HISTORY_FRAGMENT:
+                    return HistoryFragment.newInstance(position);
                 default:
                     return InputFragment.newInstance(position);
             }
         }
 
-
         @Override
         public CharSequence getPageTitle(int position) {
-            return tabNames.get(position);
+            return getString(TAB_NAMES[position]);
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return TAB_NAMES.length;
+        }
+
+        private String getFragmentTag(int viewPagerId, int fragmentPos) {
+            return "android:switcher:" + viewPagerId + ":" + fragmentPos;
         }
 
     }
+
+    private boolean isEveningShift() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        return hour > 0 && hour < 16; // after midnight and before 16:00 is evening shift
+    }
+
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
@@ -289,7 +356,7 @@ public class ViewPagerActivity extends FragmentActivity implements
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_SERVER_ADDRESS, serverAddress);
         editor.putInt(KEY_SERVER_PORT, serverPort);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

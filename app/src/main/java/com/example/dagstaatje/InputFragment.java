@@ -1,5 +1,6 @@
 package com.example.dagstaatje;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,16 +21,37 @@ import android.widget.TextView;
 
 import com.stofstik.dagstaatje.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class InputFragment extends Fragment implements TextWatcher,
         OnClickListener {
+
+    ViewPagerActivityInterface mMainActivityCallback;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mMainActivityCallback = (ViewPagerActivityInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ViewPagerActivityInterface");
+        }
+    }
+
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-M-d H:m:s");
 
     /*
      We use this boolean to improve performance by only listening to EditText when we want.
      For example if we clear all texts, it is going to calculate with every .setText("")
      */
-   static boolean listen = false;
+    private boolean mListen = false;
 
     /*
      * Used for the ViewPager
@@ -40,11 +62,6 @@ public class InputFragment extends Fragment implements TextWatcher,
      * Used for string formatter, formats to € 0.00
      */
     private static final String EURO_FORMAT = "€ %.2f";
-
-    /*
-     * Declare SharedPrefs
-     */
-    private static SharedPreferences sharedPreferences;
 
     /*
      * Keys used for SharedPreferences
@@ -66,18 +83,6 @@ public class InputFragment extends Fragment implements TextWatcher,
     private static final String KEY_ENVELOPE = "etEnvelope";
 
     /*
-     * These doubles are filled with the values of the EditTexts
-     */
-    public static double dStart, dExtra, dExtraTwo, dTurnOver, dTab, dTabPaid, dOut, dOutTwo,
-            dPin, dCounted, dEnvelope;
-
-    /*
-     * These doubles will be filled with the calculated results
-     */
-    public static double dTotalExtra, dReport, dTotalIn, dTotalOut, dTotalOutInclPin,
-            dResult, dDifference, dNewRegister;
-
-    /*
      * The layout inflater for this fragment
      */
     private LayoutInflater mInflater;
@@ -86,31 +91,31 @@ public class InputFragment extends Fragment implements TextWatcher,
      * These layouts contain the EditText that are inflated when the user needs
      * more than two input fields
      */
-    private static LinearLayout llInPlaceholder;
-    private static LinearLayout llOutPlaceholder;
+    private LinearLayout llInPlaceholder;
+    private LinearLayout llOutPlaceholder;
 
     /*
      * These ArrayLists contain the dynamically created EditTexts
      */
-    private static ArrayList<EditText> listEditTextIn = new ArrayList<EditText>();
-    private static ArrayList<EditText> listEditTextOut = new ArrayList<EditText>();
+    private ArrayList<EditText> listEditTextIn = new ArrayList<EditText>();
+    private ArrayList<EditText> listEditTextOut = new ArrayList<EditText>();
 
     /*
      * These are the static EditTexts
      */
-    public static EditText etStartAmount, etIn, etInTwo, etTurnOver, etTab, etTabPaid, etOut,
+    private EditText etStartAmount, etIn, etInTwo, etTurnOver, etTab, etTabPaid, etOut,
             etOutTwo, etPin, etCounted, etEnvelope;
 
     /*
      * The TextViews, these get updated real-time as the user enters data
      */
-    private static TextView tvTotalExtra, tvReport, tvTotalIn, tvTotalOut, tvResult, tvDifference,
+    private TextView tvTotalExtra, tvReport, tvTotalIn, tvTotalOut, tvResult, tvDifference,
             tvNew;
 
     /*
      * Root view to be able to access it's child easily (e.g. findViewById)
      */
-    private static View rootView;
+    private View rootView;
 
     public static Fragment newInstance(int sectionNumber) {
         InputFragment fragment = new InputFragment();
@@ -135,8 +140,8 @@ public class InputFragment extends Fragment implements TextWatcher,
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         initializeViews();
+        loadSharedPrefs();
         setFocus();
     }
 
@@ -147,6 +152,12 @@ public class InputFragment extends Fragment implements TextWatcher,
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        saveSharedPrefs();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_input, menu);
@@ -154,24 +165,12 @@ public class InputFragment extends Fragment implements TextWatcher,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.clear_input:
                 this.clearAll();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadSharedPreferences();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        saveSharedPreferences();
     }
 
     /*
@@ -206,7 +205,7 @@ public class InputFragment extends Fragment implements TextWatcher,
         etCounted = (EditText) rootView.findViewById(R.id.etCounted);
         etEnvelope = (EditText) rootView.findViewById(R.id.etEnvelope);
 
-        listen = false;
+        mListen = false;
         etStartAmount.addTextChangedListener(this);
         etIn.addTextChangedListener(this);
         etInTwo.addTextChangedListener(this);
@@ -218,7 +217,7 @@ public class InputFragment extends Fragment implements TextWatcher,
         etPin.addTextChangedListener(this);
         etCounted.addTextChangedListener(this);
         etEnvelope.addTextChangedListener(this);
-        listen = true;
+        mListen = true;
 
         tvTotalExtra = (TextView) rootView.findViewById(R.id.tvTotalExtra);
         tvReport = (TextView) rootView.findViewById(R.id.tvReport);
@@ -232,9 +231,10 @@ public class InputFragment extends Fragment implements TextWatcher,
     /*
      * This method saves all the EditText data to the SharedPrefs
      */
-    public void saveSharedPreferences() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+    public void saveSharedPrefs() {
         // save static EditText data
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_START, etStartAmount.getText().toString());
         editor.putString(KEY_IN, etIn.getText().toString());
         editor.putString(KEY_IN_TWO, etInTwo.getText().toString());
@@ -265,33 +265,31 @@ public class InputFragment extends Fragment implements TextWatcher,
         editor.putInt(KEY_AMOUNT_OUT, listEditTextOut.size());
 
         // Commit
-        editor.commit();
+        editor.apply();
     }
 
     /*
      * This method inflates all the saved views and fills all the EditTexts with
      * data from SharedPrefs
      */
-    public void loadSharedPreferences() {
+    public void loadSharedPrefs() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         // Before we load, we clear lists and remove views.
-        // Lists are static and will not be redeclared in onResume.
-        // So when loadSharedPreferences runs it duplicates the data in the
-        // list. The for loop will then create duplicate views as well.
         clearListsAndViews();
-        // Get the amount of created EditTexts
+        // Get the amount of 'Extra' input fields the user has created
         int iAmountIn = sharedPreferences.getInt(KEY_AMOUNT_IN, 0);
         // Then run a loop in the same way as we saved (KEY + i)
         for (int i = 0; i < iAmountIn; i++) {
             // Add a field, filled with the saved text
             addFieldIn(sharedPreferences.getString(KEY_DYNAMIC_IN + i, ""));
         }
-        // Do the same for the "Out" fields
+        // Do the same for the 'Out' fields
         int iAmountOut = sharedPreferences.getInt(KEY_AMOUNT_OUT, 0);
         for (int i = 0; i < iAmountOut; i++) {
             addFieldOut(sharedPreferences.getString(KEY_DYNAMIC_OUT + i, ""));
         }
 
-        listen =  false;
+        mListen = false;
         // Load data for the static EditTexts
         etStartAmount.setText(sharedPreferences.getString(KEY_START, ""));
         etIn.setText(sharedPreferences.getString(KEY_IN, ""));
@@ -304,14 +302,14 @@ public class InputFragment extends Fragment implements TextWatcher,
         etPin.setText(sharedPreferences.getString(KEY_PIN, ""));
         etCounted.setText(sharedPreferences.getString(KEY_COUNTED, ""));
         etEnvelope.setText(sharedPreferences.getString(KEY_ENVELOPE, ""));
-        listen = true;
+        mListen = true;
 
         // Calculate and set TextViews
-        calculateAll();
+        updateCurrentDagstaat();
     }
 
     /*
-     * This method adds another "register in" field for the user it can be
+     * This method adds another 'Extra' field for the user it can be
      * passed a String when loading content from SharedPrefs on boot
      */
     public void addFieldIn(String str) {
@@ -330,9 +328,9 @@ public class InputFragment extends Fragment implements TextWatcher,
     }
 
     /*
-     * This method adds another "register out" field for the user it can be
-     * passed a String when loading content from SharedPrefs on boot for further
-     * commenting see the "register in" method above
+     * This method adds another 'Out' field for the user it can be
+     * passed a String when loading content from SharedPrefs on boot for detailed comments
+     * see the addFieldIn method
      */
     public void addFieldOut(String str) {
         View v = mInflater.inflate(R.layout.layout_uit_kas, null);
@@ -350,29 +348,29 @@ public class InputFragment extends Fragment implements TextWatcher,
      * TextViews
      */
     public void removeFieldIn() {
-        int childs = llInPlaceholder.getChildCount();
-        if (childs > 0) {
-            llInPlaceholder.removeViewAt(childs - 1);
+        int children = llInPlaceholder.getChildCount();
+        if (children > 0) {
+            llInPlaceholder.removeViewAt(children - 1);
             int size = listEditTextIn.size();
             listEditTextIn.remove(size - 1);
-            calculateAll();
+            updateCurrentDagstaat();
         }
     }
 
     public void removeFieldOut() {
-        int childs = llOutPlaceholder.getChildCount();
+        int children = llOutPlaceholder.getChildCount();
         if (llOutPlaceholder.getChildCount() > 0) {
-            llOutPlaceholder.removeViewAt(childs - 1);
+            llOutPlaceholder.removeViewAt(children - 1);
             int size = listEditTextOut.size();
             listEditTextOut.remove(size - 1);
-            calculateAll();
+            updateCurrentDagstaat();
         }
     }
 
     /*
      * This method removes all dynamically created views from their placeholders
      */
-    public static void clearListsAndViews() {
+    private void clearListsAndViews() {
         listEditTextOut.clear();
         listEditTextIn.clear();
         llInPlaceholder.removeAllViews();
@@ -380,11 +378,11 @@ public class InputFragment extends Fragment implements TextWatcher,
     }
 
     /*
-     * This method clears all EditTexts and remove all dynamically created views
+     * This method clears all EditTexts and removes all dynamically created views
      */
-    public static void clearAll() {
+    public void clearAll() {
         // clear EditTexts
-        listen = false;
+        mListen = false;
         etStartAmount.setText("");
         etIn.setText("");
         etInTwo.setText("");
@@ -396,80 +394,88 @@ public class InputFragment extends Fragment implements TextWatcher,
         etPin.setText("");
         etCounted.setText("");
         etEnvelope.setText("");
-        listen = true;
+        mListen = true;
         // clear extra fields
         clearListsAndViews();
         // set focus back to start
         setFocus();
-        // re calculate and reset all TextViews
-        calculateAll();
+        // re-calculate and reset all TextViews
+        updateCurrentDagstaat();
     }
 
     /*
      * This method sets focus to the top most EditText and sets the cursor to
      * the end of the text
      */
-    public static void setFocus() {
+    private void setFocus() {
         etStartAmount.requestFocus();
         int position = etStartAmount.getText().length();
         etStartAmount.setSelection(position);
     }
 
+    private void updateCurrentDagstaat() {
+        // Update current dagstaat with the values from the EditTexts
+        mMainActivityCallback.getCurrentDagstaat()
+                .setShift(DATE_FORMAT.format(Calendar.getInstance().getTime()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setStart(parseTextToDouble(etStartAmount.getText().toString()));
+        mMainActivityCallback.getCurrentDagstaat().setExtra(
+                parseTextToDouble(etIn.getText().toString())
+                        + parseTextToDouble(etInTwo.getText().toString()
+                        + mDynamicExtra()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setTurnover(parseTextToDouble(etTurnOver.getText().toString()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setTab(parseTextToDouble(etTab.getText().toString()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setTabPaid(parseTextToDouble(etTabPaid.getText().toString()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setOut(parseTextToDouble(etOut.getText().toString())
+                        + parseTextToDouble(etOutTwo.getText().toString()
+                        + mDynamicOut()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setPin(parseTextToDouble(etPin.getText().toString()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setCounted(parseTextToDouble(etCounted.getText().toString()));
+        mMainActivityCallback.getCurrentDagstaat()
+                .setEnvelope(parseTextToDouble(etEnvelope.getText().toString()));
+
+        // Update TextViews with the values from current dagstaat
+        tvTotalExtra.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getExtra()));
+        tvReport.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getReport()));
+        tvTotalIn.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getTotalIn()));
+        tvTotalOut.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getTotalOut()));
+        tvResult.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getResult()));
+        tvDifference.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getDifference()));
+        tvNew.setText(String.format(EURO_FORMAT,
+                mMainActivityCallback.getCurrentDagstaat().getNew()));
+
+        // Update the overview fragment with the values from current dagstaat
+        mMainActivityCallback.updateOverviewFragment();
+    }
+
+
     /*
-     * This method will calculate everything and set the TextViews accordingly
+    Get the
      */
-    public static void calculateAll() {
-        // Parse every EditText to a double
-        dStart = parseTextToDouble(etStartAmount.getText().toString());
-        dExtra = parseTextToDouble(etIn.getText().toString());
-        dExtraTwo = parseTextToDouble(etInTwo.getText().toString());
-        dTurnOver = parseTextToDouble(etTurnOver.getText().toString());
-        dTab = parseTextToDouble(etTab.getText().toString());
-        dTabPaid = parseTextToDouble(etTabPaid.getText().toString());
-        dOut = parseTextToDouble(etOut.getText().toString());
-        dOutTwo = parseTextToDouble(etOutTwo.getText().toString());
-        dPin = parseTextToDouble(etPin.getText().toString());
-        dCounted = parseTextToDouble(etCounted.getText().toString());
-        dEnvelope = parseTextToDouble(etEnvelope.getText().toString());
-
-        // Extra cash in the register, extra + dynamic extra
-        dTotalExtra = dExtra + dExtraTwo + dDynamicExtra();
-        // The report, turn over - tabbed + tabs paid
-        dReport = dTurnOver - dTab + dTabPaid;
-        // Total amount of cash in register, start amount + extra + registered
-        dTotalIn = dStart + dTotalExtra + dReport;
-        // Total amount taken out of the register
-        dTotalOut = dOut + dOutTwo + dDynamicOut();
-        // We also subtract PIN transactions, because they have been entered
-        // into the register, but have of course not been added into the drawer
-        // as cash.
-        dTotalOutInclPin = dTotalOut + dPin;
-        // The amount of cash left in the register
-        dResult = dTotalIn - dTotalOutInclPin;
-        // The difference between what the user counted and what is actually in
-        // the register
-        dDifference = dCounted - dResult;
-        // The new start amount for the next day, counted money minus envelope
-        dNewRegister = dCounted - dEnvelope;
-
-        // Update TextViews
-        tvTotalExtra.setText(String.format(EURO_FORMAT, dTotalExtra));
-        tvReport.setText(String.format(EURO_FORMAT, dReport));
-        tvTotalIn.setText(String.format(EURO_FORMAT, dTotalIn));
-        tvTotalOut.setText(String.format(EURO_FORMAT, dTotalOutInclPin));
-        tvResult.setText(String.format(EURO_FORMAT, dResult));
-        tvDifference.setText(String.format(EURO_FORMAT, dDifference));
-        tvNew.setText(String.format(EURO_FORMAT, dNewRegister));
-
-        // Also update OverviewFragment TextViews
-        OverviewFragment.update();
+    public void updateFields() {
+        etCounted.setText((String.format(Locale.UK, "%.2f",
+                mMainActivityCallback.getCurrentDagstaat().getCounted())));
+        etEnvelope.setText((String.format(Locale.UK, "%.2f",
+                mMainActivityCallback.getCurrentDagstaat().getEnvelope())));
     }
 
     /*
      * This method returns a double value of all the dynamically created "in"
      * EditTexts
      */
-    public static double dDynamicExtra() {
+    private double mDynamicExtra() {
         double result = 0;
         for (EditText et : listEditTextIn) {
             result += parseTextToDouble(et.getText().toString());
@@ -481,7 +487,7 @@ public class InputFragment extends Fragment implements TextWatcher,
      * This method returns a double value of all the dynamically created "out"
      * EditTexts
      */
-    public static double dDynamicOut() {
+    private double mDynamicOut() {
         double result = 0;
         for (EditText et : listEditTextOut) {
             result += parseTextToDouble(et.getText().toString());
@@ -489,33 +495,23 @@ public class InputFragment extends Fragment implements TextWatcher,
         return result;
     }
 
-    /*
-     * This method converts a String to a double value, checking if the String
-     * passed is workable, if it is not it returns an obviously incorrect number (for this application)
-     */
-    public static double parseTextToDouble(String str) {
-        double result;
-        if (str.matches("") || str == null) {
-            result = 0;
-        } else {
-            try {
-                result = Double.parseDouble(str);
-            } catch (NumberFormatException e) {
-                result = -999999;
-            }
+    private double parseTextToDouble(String str) {
+        try {
+            return Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return 0;
         }
-        return result;
     }
 
     /*
-     * After text in an EditText has changed we calculate everything and update
-     * all TextViews
+     * After text in an EditText has changed we calculate everything, update current dagstaat
+     * and set all TextViews
      */
     @Override
     public void afterTextChanged(Editable arg0) {
         // Only calculate when we want it to
-        if(listen){
-            calculateAll();
+        if (mListen) {
+            updateCurrentDagstaat();
         }
     }
 
